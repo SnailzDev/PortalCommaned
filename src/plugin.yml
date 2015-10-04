@@ -1,0 +1,22 @@
+name: PortalCommand
+version: 0.1
+main: net.snailz.portalcommand.PortalCommand
+author: Snailz
+commands:
+    pc:
+        permission: portalcommand.command
+        description: The main command for PortalCommand
+        usage: Syntax error! do /pc help for information on how to use PortalCommand commands!
+        
+permissions:
+    portalcommand.*:
+        description: Gives access to all portalcommand features
+        children:
+            portalcommand.command: true
+            portalcommand.use: true
+    portalcommand.use:
+        description: Allow PortalCommand to run a command when you enter a region
+        default: true
+    portalcommand.command:
+        description: Gives a player permission to edit PortalCommand regions
+        default: op

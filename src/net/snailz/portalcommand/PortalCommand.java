@@ -68,13 +68,13 @@ public class PortalCommand extends JavaPlugin implements CommandExecutor, Listen
         return false;
     }
     @EventHandler
-    public void PlayerMoveEvent(Player player){
-        //need to check all regions
-        Border border = new Border(new Vector(this.getConfig().getInt(),0,10), new Vector(10,skylimit,-10));
-        if(border.contains(player.getLocation())) {
+    public void PlayerMoveEvent(PlayerMoveEvent event){
+        if (event.getPlayer().hasPermission("portalcommand.use")){
             
         }
+            
         
     }
-   
+    
 }
+   
