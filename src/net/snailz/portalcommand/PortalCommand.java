@@ -1,7 +1,5 @@
 package net.snailz.portalcommand;
 
-import java.util.Vector;
-import javax.swing.border.Border;
 import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
