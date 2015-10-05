@@ -1,5 +1,6 @@
 package net.snailz.portalcommand;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,34 +33,38 @@ public class PortalCommand extends JavaPlugin implements CommandExecutor, Listen
                 int pos1z = (int) player.getLocation().getZ();
                 this.getConfig().set(args[1], pos1z);
                 player.sendMessage(Color.YELLOW + "[PortalCommand] " + Color.GREEN + "Position 1 Set for " + args[1] + "!");
+                this.saveConfig();
                 return true;
             } else if (args[0].equalsIgnoreCase("p2")){
                 Player player = (Player) sender;
                 int pos1x = (int) player.getLocation().getX();
-                this.getConfig().set(args[1], pos1x);
+                this.getConfig().set("regions." + args[1], pos1x);
                 int pos1y = (int) player.getLocation().getY();
                 this.getConfig().set("regions." + args[1], pos1y);
                 int pos1z = (int) player.getLocation().getZ();
-                this.getConfig().set(args[1], pos1z);
-                player.sendMessage(Color.YELLOW + "[PortalCommand] " + Color.GREEN + "Position 2 Set for " + args[1] + "!");
+                this.getConfig().set("regions." + args[1], pos1z);
+                player.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Position 2 Set for " + args[1] + "!");
+                this.saveConfig();
                 return true;
             } else if (args[0].equalsIgnoreCase("command")){
-                Player player = (Player) sender;
-                this.getConfig().set(args[1], args[2]);
-                player.sendMessage(Color.YELLOW + "[PortalCommand] " + Color.GREEN + "Command Set for " + args[1] + "!");
+                this.getConfig().set("regions." + args[1], args[2]);
+                sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + args[1] + "!");
+                this.saveConfig();
                 
             } else if (args[0].equalsIgnoreCase("help")){
-                Player player = (Player) sender;
-                player.sendMessage(Color.BLUE + "----------" + Color.GREEN + "PortalCommand Help" + Color.BLUE + "----------");
-                player.sendMessage(Color.BLUE + "p1:");
-                player.sendMessage(Color.GREEN + "Syntax: /pc help");
-                player.sendMessage(Color.GREEN + "Use: Show this page");
-                player.sendMessage(Color.GREEN + "Syntax: /pc p1 <portalname>");
-                player.sendMessage(Color.GREEN + "Use: Set position 1 of a portal");
-                player.sendMessage(Color.GREEN + "Syntax: /pc p2 <portalname>");
-                player.sendMessage(Color.GREEN + "Use: Set position 2 of a portal");
-                //Add more help here
-                player.sendMessage(Color.BLUE + "----------------------------");
+                sender.sendMessage(ChatColor.BLUE + "----------" + ChatColor.GREEN + "PortalCommand Help" + ChatColor.BLUE + "----------");
+                sender.sendMessage(ChatColor.BLUE + "help:");
+                sender.sendMessage(ChatColor.GREEN + "Syntax: /pc help");
+                sender.sendMessage(ChatColor.GREEN + "Use: Show this page");
+                sender.sendMessage(ChatColor.BLUE + "pl:");
+                sender.sendMessage(ChatColor.GREEN + "Syntax: /pc p1 <portalname>");
+                sender.sendMessage(ChatColor.GREEN + "Use: Set position 1 of a portal");
+                sender.sendMessage(ChatColor.BLUE + "p2:");
+                sender.sendMessage(ChatColor.GREEN + "Syntax: /pc p2 <portalname>");
+                sender.sendMessage(ChatColor.GREEN + "Use: Set position 2 of a portal");
+                sender.sendMessage(ChatColor.BLUE + "command:");
+                sender.sendMessage(ChatColor.GREEN + "Syntax: /pc command <portalcommand> <command>");
+                sender.sendMessage(ChatColor.GREEN + "Use: Set the command to be executed when a player enters the portal");
                 return true;
             }
         }

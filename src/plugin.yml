@@ -1,5 +1,5 @@
 name: PortalCommand
-version: 0.1
+version: 1.0
 main: net.snailz.portalcommand.PortalCommand
 author: Snailz
 commands:
