@@ -1,10 +1,19 @@
 package net.snailz.portalcommand;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import static java.util.logging.Level.SEVERE;
+import java.util.logging.Logger;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.jline.internal.Log.Level;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,40 +25,92 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Snailz
  */
 public class PortalCommand extends JavaPlugin implements CommandExecutor, Listener{
+    private FileConfiguration regions = null;
+    private File regionsfile = null;
+    
+    public void reloadRegionsFile() throws UnsupportedEncodingException {
+    if (regionsfile == null) {
+    regionsfile = new File(getDataFolder(), "regions.yml");
+    }
+    regions = YamlConfiguration.loadConfiguration(regionsfile);
+ 
+    // Look for defaults in the jar
+    Reader defConfigStream;
+    defConfigStream = new InputStreamReader(this.getResource("regions.yml"), "UTF8");
+    if (defConfigStream != null) {
+        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+        regions.setDefaults(defConfig);
+    }
+    
+    
+}
+    
+    public FileConfiguration getRegionsFile() throws UnsupportedEncodingException {
+    if (regions == null) {
+        reloadRegionsFile();
+    }
+    return regions;
+}
+    
+    public void saveRegionsFile() {
+    if (regions == null || regionsfile == null) {
+        return;
+    }
+    try {
+        getRegionsFile().save(regionsfile);
+    } catch (IOException ex) {
+        getLogger().log(SEVERE, "Could not save config to " + regionsfile + " Please report this to Snailz", ex);
+    }
+}
+    
     @Override
     public void onEnable(){
         this.saveDefaultConfig();
+        this.saveRegionsFile();
         
     }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         if (cmd.getName().equalsIgnoreCase("pc")){
             if (args[0].equalsIgnoreCase("p1")){
-                Player player = (Player) sender;
-                int pos1x = (int) player.getLocation().getX();
-                this.getConfig().set(args[1], pos1x);
-                int pos1y = (int) player.getLocation().getY();
-                this.getConfig().set(args[1], pos1y);
-                int pos1z = (int) player.getLocation().getZ();
-                this.getConfig().set(args[1], pos1z);
-                player.sendMessage(Color.YELLOW + "[PortalCommand] " + Color.GREEN + "Position 1 Set for " + args[1] + "!");
-                this.saveConfig();
-                return true;
+                try {
+                    Player player = (Player) sender;
+                    int pos1x = (int) player.getLocation().getX();
+                    this.getRegionsFile().set("regions." + args[1] + ".coordinates.position1.x", pos1x);
+                    int pos1y = (int) player.getLocation().getY();
+                    this.getRegionsFile().set("regions." + args[1] + ".coordinates.position1.y", pos1y);
+                    int pos1z = (int) player.getLocation().getZ();
+                    this.getRegionsFile().set("regions." + args[1] + ".coordinates.position1.z", pos1z);
+                    player.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Position 1 Set for " + args[1] + "!");
+                    this.saveRegionsFile();
+                    return true;
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(PortalCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
             } else if (args[0].equalsIgnoreCase("p2")){
-                Player player = (Player) sender;
-                int pos1x = (int) player.getLocation().getX();
-                this.getConfig().set("regions." + args[1], pos1x);
-                int pos1y = (int) player.getLocation().getY();
-                this.getConfig().set("regions." + args[1], pos1y);
-                int pos1z = (int) player.getLocation().getZ();
-                this.getConfig().set("regions." + args[1], pos1z);
-                player.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Position 2 Set for " + args[1] + "!");
-                this.saveConfig();
-                return true;
+                try {
+                    Player player = (Player) sender;
+                    int pos2x = (int) player.getLocation().getX();
+                    this.getRegionsFile().set("regions." + args[1] + ".coordinates.position2.x", pos2x);
+                    int pos2y = (int) player.getLocation().getY();
+                    this.getRegionsFile().set("regions." + args[1] + ".coordinates.position2.y", pos2y);
+                    int pos2z = (int) player.getLocation().getZ();
+                    this.getRegionsFile().set("regions." + args[1] + ".coordinates.position1.z", pos2z);
+                    player.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Position 2 Set for " + args[1] + "!");
+                    this.saveRegionsFile();
+                    return true;
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(PortalCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
             } else if (args[0].equalsIgnoreCase("command")){
-                this.getConfig().set("regions." + args[1], args[2]);
-                sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + args[1] + "!");
-                this.saveConfig();
+                try {
+                    this.getRegionsFile().set("regions." + args[1] + ".command", args[2]);
+                    sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + args[1] + "!");
+                    this.saveRegionsFile();
+                    return true;
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(PortalCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
                 
             } else if (args[0].equalsIgnoreCase("help")){
                 sender.sendMessage(ChatColor.BLUE + "----------" + ChatColor.GREEN + "PortalCommand Help" + ChatColor.BLUE + "----------");
@@ -63,7 +124,7 @@ public class PortalCommand extends JavaPlugin implements CommandExecutor, Listen
                 sender.sendMessage(ChatColor.GREEN + "Syntax: /pc p2 <portalname>");
                 sender.sendMessage(ChatColor.GREEN + "Use: Set position 2 of a portal");
                 sender.sendMessage(ChatColor.BLUE + "command:");
-                sender.sendMessage(ChatColor.GREEN + "Syntax: /pc command <portalcommand> <command>");
+                sender.sendMessage(ChatColor.GREEN + "Syntax: /pc command <portalname> <command>");
                 sender.sendMessage(ChatColor.GREEN + "Use: Set the command to be executed when a player enters the portal");
                 return true;
             }
