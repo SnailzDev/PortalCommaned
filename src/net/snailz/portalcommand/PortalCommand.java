@@ -5,13 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import static java.lang.Integer.parseInt;
-import java.util.logging.Level;
 import static java.util.logging.Level.SEVERE;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +16,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -29,6 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PortalCommand extends JavaPlugin implements CommandExecutor, Listener{
     private FileConfiguration regions = null;
     private File regionsfile = null;
+    
     
     public void reloadRegionsFile() throws UnsupportedEncodingException {
     if (regionsfile == null) {
@@ -76,19 +72,67 @@ public class PortalCommand extends JavaPlugin implements CommandExecutor, Listen
     public void onEnable(){
         this.saveDefaultConfig();
         this.saveDefaultRegionsFile();
+        getServer().getPluginManager().registerEvents(new EnterRegion(), this);
+        
     }  
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         if (cmd.getName().equalsIgnoreCase("pc")){
             if (args[0].equalsIgnoreCase("p1")){
+                try {
+                    if (args.length == 1){
+                        Player player = (Player) sender;
+                        int count = this.getRegionsFile().getInt("count");
+                        this.getRegionsFile().set("regions." + count + ".cordnates.1.x", player.getLocation().getBlockX());
+                        this.getRegionsFile().set("regions." + count + ".cordnates.1.y", player.getLocation().getBlockY());
+                        this.getRegionsFile().set("regions." + count + ".cordnates.1.z", player.getLocation().getBlockZ());
+                        sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + count + "!");
+                        count = count + 1;
+                        this.getRegionsFile().set("count", count);
+                        this.saveRegionsFile();
+                        return true;
+                    }
+                        Player player = (Player) sender;
+                        this.getRegionsFile().set("regions." + args[2] + ".cordnates.1.x", player.getLocation().getBlockX());
+                        this.getRegionsFile().set("regions." + args[2] + ".cordnates.1.y", player.getLocation().getBlockY());
+                        this.getRegionsFile().set("regions." + args[2] + ".cordnates.1.z", player.getLocation().getBlockZ());
+                        sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + args[2] + "!");
+                        this.saveRegionsFile();
+                        return true;
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(PortalCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
             }if (args[0].equalsIgnoreCase("p2")){
+                try {
+                    if (args.length == 1){
+                        Player player = (Player) sender;
+                        int count = this.getRegionsFile().getInt("count");
+                        this.getRegionsFile().set("regions." + count + ".cordnates.2.x", player.getLocation().getBlockX());
+                        this.getRegionsFile().set("regions." + count + ".cordnates.2.y", player.getLocation().getBlockY());
+                        this.getRegionsFile().set("regions." + count + ".cordnates.2.z", player.getLocation().getBlockZ());
+                        sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + count + "!");
+                        count = count + 1;
+                        this.getRegionsFile().set("count", count);
+                        this.saveRegionsFile();
+                        return true;
+                    }
+                        Player player = (Player) sender;
+                        this.getRegionsFile().set("regions." + args[2] + ".cordnates.2.x", player.getLocation().getBlockX());
+                        this.getRegionsFile().set("regions." + args[2] + ".cordnates.2.y", player.getLocation().getBlockY());
+                        this.getRegionsFile().set("regions." + args[2] + ".cordnates.2.z", player.getLocation().getBlockZ());
+                        sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + args[2] + "!");
+                        this.saveRegionsFile();
+                        return true;
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(PortalCommand.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
                 
             } else if (args[0].equalsIgnoreCase("command")){
                 try {
                     if (args.length == 2){
                         int count = this.getRegionsFile().getInt("count");
                         this.getRegionsFile().set("regions." + count + ".command", args[1]);
-                        sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + args[1] + "!");
+                        sender.sendMessage(ChatColor.YELLOW + "[PortalCommand] " + ChatColor.GREEN + "Command Set for " + count + "!");
                         count = count + 1;
                         this.getRegionsFile().set("count", count);
                         this.saveRegionsFile();

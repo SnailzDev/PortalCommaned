@@ -7,6 +7,7 @@ package net.snailz.portalcommand;
 
 import java.io.UnsupportedEncodingException;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -16,7 +17,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * @author user
  */
 public class EnterRegion extends PortalCommand implements Listener{
-    
     @EventHandler
     public void PlayerMoveEvent(PlayerMoveEvent event) throws UnsupportedEncodingException{
         int count = this.getRegionsFile().getInt("count");
