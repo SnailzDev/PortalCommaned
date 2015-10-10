@@ -72,7 +72,7 @@ public class PortalCommand extends JavaPlugin implements CommandExecutor, Listen
     public void onEnable(){
         this.saveDefaultConfig();
         this.saveDefaultRegionsFile();
-        getServer().getPluginManager().registerEvents(new EnterRegion(), this);
+        getServer().getPluginManager().registerEvents((Listener) new EnterRegion(), this);
         
     }  
     @Override
