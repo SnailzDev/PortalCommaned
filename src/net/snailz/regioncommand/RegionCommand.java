@@ -132,13 +132,15 @@ public class RegionCommand extends JavaPlugin implements CommandExecutor, Listen
     
         @EventHandler
     public void PlayerMoveEvent(PlayerMoveEvent event) throws UnsupportedEncodingException{
-        int x;
-        for (x=0; x<this.getRegionsFile().getInt("count"); x++){
-            Cuboid region = (Cuboid) this.getRegionsFile().get("regions." + x + ".loc");
-            if (region.containsLocation(event.getTo()) && !region.containsLocation(event.getFrom())){
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), this.getRegionsFile().getString("regions." + x + ".command"));
+        if (event.getPlayer().hasPermission("portalcommand.use")){
+            
+            for (int x=0; x>this.getRegionsFile().getInt("count"); x++){
+                Cuboid region = (Cuboid) this.getRegionsFile().get("regions." + x + ".loc");
+                if (region.containsLocation(event.getTo()) && !region.containsLocation(event.getFrom())){
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), this.getRegionsFile().getString("regions." + x + ".command"));
             }
             
+        }
         }
 
     }
