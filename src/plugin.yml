@@ -1,22 +1,23 @@
-name: PortalCommand
+name: RegionCommand
 version: 1.0
-main: net.snailz.portalcommand.PortalCommand
+main: net.snailz.regioncommand.RegionCommand
+depend: [WorldEdit]
 author: Snailz
 commands:
-    pc:
+    rgc:
         permission: portalcommand.command
         description: The main command for PortalCommand
-        usage: Syntax error! do /pc help for information on how to use PortalCommand commands!
+        usage: Syntax error! do /rgc help for information on how to use PortalCommand commands!
         
 permissions:
-    portalcommand.*:
+    regioncommand.*:
         description: Gives access to all portalcommand features
         children:
             portalcommand.command: true
             portalcommand.use: true
-    portalcommand.use:
+    regioncommand.use:
         description: Allow PortalCommand to run a command when you enter a region
         default: true
-    portalcommand.command:
+    regioncommand.command:
         description: Gives a player permission to edit PortalCommand regions
         default: op
