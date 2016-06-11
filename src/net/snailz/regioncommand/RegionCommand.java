@@ -150,6 +150,7 @@ public class RegionCommand extends JavaPlugin implements CommandExecutor, Listen
             while (x > this.getRegionsFile().getInt("count")){
                 Cuboid region = (Cuboid) this.getRegionsFile().get("regions." + x + ".loc");
                 if (region.containsLocation(event.getTo()) && !region.containsLocation(event.getFrom())){
+                    String  regionnum = Intager.toString(x);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), this.getRegionsFile().getString("regions." + x + ".command"));
                     break;
             }
